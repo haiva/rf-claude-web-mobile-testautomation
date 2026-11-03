@@ -1,4 +1,4 @@
-# rf-ai-demo – Robot Framework -testiautomaatio Claude Codella
+# rf-claude-web-mobile-testautomation – Robot Framework -testiautomaatio Claude Codella
 
 Esimerkkirepo, jonka periaate on: **yksi repo, samat ylätason testit kaikille laitteille,
 laite- ja alustakohtainen toteutus omissa kansioissaan.**

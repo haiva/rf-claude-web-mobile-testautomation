@@ -1,4 +1,4 @@
-# rf-claude-web-mobile-demo – Robot Framework + Claude Code testiautomaation tehostamiseen
+# rf-claude-web-mobile-testautomation – Robot Framework + Claude Code testiautomaation tehostamiseen
 
 Esimerkkirepo Robot Framework -testiautomaatiosta Claude Codella. Samat testit ajetaan yle.fi:tä
 vasten **työpöytäselaimella** ja **mobiiliselaimella** (Browser Libraryn laite-emulointi).
@@ -12,6 +12,18 @@ Repo näyttää, miten Claude Code kirjoittaa testejä olemassa olevaa rakennett
 4. [Testien ajaminen](#testien-ajaminen)
 5. [Tietoturva](#tietoturva)
 6. [Vianetsintä](#vianetsintä)
+7. [Huomioita](#huomioita)
+
+**Pikaohje** (kun Git, Python 3.10+, Node.js 20+ ja Claude Code ovat jo koneella):
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate     # Windows (Git Bash): python -m venv .venv && source .venv/Scripts/activate
+pip install -r requirements.txt                        # Robot Framework, Browser, Robocop ja RF-MCP
+rfbrowser init chromium
+cp .env.example .env && source .env                    # täytä ensin YLE_USER ja YLE_PASSWORD
+bash scripts/tarkista_ymparisto.sh
+claude
+```
 
 ---
 
@@ -42,7 +54,7 @@ Windowsin mukana ja jota myös Claude Code käyttää Windowsissa.
 
 ## Ensimmäinen asennus
 
-Vaiheet 1–2 tehdään vain, jos työkaluja ei ole vielä koneella. Vaiheet 3–7 tehdään kerran
+Vaiheet 1–2 tehdään vain, jos työkaluja ei ole vielä koneella. Vaiheet 3–6 tehdään kerran
 jokaiselle repon kopiolle.
 
 ### Vaihe 1: Tarkista, mitä sinulla jo on
@@ -55,7 +67,6 @@ versio on vanhempi kuin vaadittu, asenna työkalu vaiheessa 2.
 | Git | `git --version` | mikä tahansa | repo; Windowsissa myös Git Bash |
 | Python | `python3 --version` (Windows: `python --version`) | 3.10+ | Robot Framework |
 | Node.js | `node --version` | 20+ | Browser Library (Playwright) |
-| uv | `uv --version` | mikä tahansa | RF-MCP:n asennus |
 | VS Code | `code --version` | mikä tahansa | editori |
 | Claude Code | `claude --version` | uusin | agentti |
 
@@ -65,7 +76,7 @@ Asenna vain ne, jotka puuttuivat. Avaa asennusten jälkeen **uusi terminaali**, 
 
 **macOS** (Homebrew):
 ```bash
-brew install git python@3.12 node uv
+brew install git python@3.14 node
 brew install --cask visual-studio-code
 curl -fsSL https://claude.ai/install.sh | bash          # Claude Code
 ```
@@ -73,44 +84,42 @@ curl -fsSL https://claude.ai/install.sh | bash          # Claude Code
 **Windows** (PowerShell):
 ```powershell
 winget install --id Git.Git -e                          # sisältää Git Bashin
-winget install --id Python.Python.3.12 -e
+winget install --id Python.Python.3.14 -e
 winget install --id OpenJS.NodeJS.LTS -e
 winget install --id Microsoft.VisualStudioCode -e
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"   # uv
-irm https://claude.ai/install.ps1 | iex                                             # Claude Code
+irm https://claude.ai/install.ps1 | iex                 # Claude Code
 ```
 Claude Coden ajantasainen asennusohje: https://docs.claude.com (Claude Code → Setup).
 
 > **Windows:** tästä eteenpäin kaikki komennot ajetaan **Git Bashissa**.
 
-### Vaihe 3: Hae repo ja luo Python-ympäristö
+### Vaihe 3: Hae repo ja asenna Python-paketit
 
 Tee tämä **ennen** kuin avaat repon VS Codessa, jotta Python-ympäristö on olemassa, kun VS Code
 etsii sitä.
 
 ```bash
-git clone <repon-osoite> rf-ai-demo
-cd rf-ai-demo
+git clone <repon-osoite>
+cd rf-claude-web-mobile-testautomation
 
 python3 -m venv .venv            # Windows: python -m venv .venv
 source .venv/bin/activate        # Windows: source .venv/Scripts/activate
 pip install -r requirements.txt
 rfbrowser init chromium          # Browser Libraryn selain
-```
-
-### Vaihe 4: Asenna RF-MCP
-
-RF-MCP antaa Claude Codelle oikean Robot Framework -session, jolla se tutkii sivuja ja kokeilee
-askeleita ennen kuin kirjoittaa testejä.
-
-```bash
-uv tool install "rf-mcp[web]"    # robotmcp-komento PATHiin
-robotmcp init --browsers         # RF-MCP:n omat selaimet
 robotmcp doctor -C .             # tarkistaa, mitä RF-MCP näkee tästä projektista
 ```
-Versio näkyy komennolla `uv tool list`. Halutessasi lukitse se: `uv tool install "rf-mcp[web]==<versio>"`.
 
-### Vaihe 5: Aseta tunnukset
+`requirements.txt` asentaa samaan `.venv`:iin Robot Frameworkin, Browser Libraryn, Robocopin ja
+**RF-MCP:n** (`rf-mcp[web]`). RF-MCP antaa Claude Codelle oikean Robot Framework -session, jolla
+se tutkii sivuja ja kokeilee askeleita ennen kuin kirjoittaa testejä. Koska RF-MCP on samassa
+ympäristössä kuin testit, se käyttää samoja kirjastoversioita ja samaa `rfbrowser init`-selainta.
+
+`robotmcp`-komento on PATHissa vain, kun `.venv` on aktivoitu. Claude Code käynnistää RF-MCP:n
+siksi aina terminaalista, jossa venv on aktiivinen (ks. [Joka kerta](#joka-kerta-kun-aloitat-työskentelyn)).
+Asennettu versio näkyy komennolla `pip show rf-mcp`. Halutessasi lukitse se `requirements.txt`:ssä:
+`rf-mcp[web]==<versio>`.
+
+### Vaihe 4: Aseta tunnukset
 
 Kirjautumistestit tarvitsevat oman Yle Tunnuksen. Sen voi luoda maksutta yle.fi:n
 Kirjaudu-painikkeesta. Tunnukset annetaan ympäristömuuttujina, eivät tiedostoissa.
@@ -121,7 +130,7 @@ source .env
 ```
 `.env` on `.gitignore`ssa, eikä Claude Code saa lukea sitä.
 
-### Vaihe 6: Avaa VS Code ja valitse Python-tulkki
+### Vaihe 5: Avaa VS Code ja valitse Python-tulkki
 
 ```bash
 code .
@@ -133,28 +142,31 @@ code .
 Jos RobotCode pyytää asentamaan Robot Frameworkin käyttäjälle, kieltäydy: tulkiksi ei ole
 valittu `.venv`:iä.
 
-### Vaihe 7: Tarkista asennus
+### Vaihe 6: Tarkista asennus
 
+Aja VS Coden terminaalissa (Windowsissa Git Bash):
 ```bash
+source .venv/bin/activate             # Windows: source .venv/Scripts/activate
+source .env
 bash scripts/tarkista_ymparisto.sh    # kaikkien rivien pitäisi olla [OK]
 bash scripts/aja.sh web               # ensimmäinen oikea ajo: 1 passed
+claude
 ```
-Käynnistä Claude Code VS Coden terminaalissa komennolla `claude` (samassa terminaalissa, jossa
-ajoit `source .env`) ja tarkista komennolla `/mcp`,
-että robotmcp on "connected". Hyväksy projektin MCP-palvelin, kun Claude Code kysyy sitä.
+Hyväksy projektin MCP-palvelin, kun Claude Code kysyy sitä, ja tarkista komennolla `/mcp`, että
+robotmcp on "connected".
 
 ### Joka kerta, kun aloitat työskentelyn
 
 Avaa repo VS Codessa ja aja VS Coden omassa terminaalissa (Windowsissa Git Bash):
 ```bash
+source .venv/bin/activate             # Windows: source .venv/Scripts/activate
 source .env                           # tunnukset tähän terminaaliin
-claude                                # Claude Code näkee tunnukset
+claude                                # Claude Code näkee venvin (robotmcp) ja tunnukset
 ```
-Venviä ei tarvitse aktivoida: skriptit ja hookit löytävät sen itse.
 
-Ympäristömuuttujat näkyvät vain siinä terminaalissa, jossa `source .env` ajettiin, ja sieltä
-käynnistetyissä ohjelmissa. VS Coden Claude Code -paneeli ei välttämättä näe niitä, jos VS Code
-oli jo auki. Käynnistä Claude siksi samassa terminaalissa.
+Aktivoitu venv ja `.env`-muuttujat näkyvät vain siinä terminaalissa, jossa ne ladattiin, ja sieltä
+käynnistetyissä ohjelmissa. Käynnistä Claude siksi samassa terminaalissa. VS Coden Claude Code
+-paneeli ei välttämättä näe niitä, jos VS Code oli jo auki ennen aktivointia.
 
 ---
 
@@ -291,13 +303,14 @@ pysyvän luvan kanssa. Lupa poistetaan samasta paikasta.
 
 | Oire | Syy | Korjaus |
 |---|---|---|
-| RobotCode pyytää asentamaan Robot Frameworkin käyttäjälle | tulkiksi ei ole valittu `.venv`:iä | kieltäydy ja tee vaihe 6 |
+| RobotCode pyytää asentamaan Robot Frameworkin käyttäjälle | tulkiksi ei ole valittu `.venv`:iä | kieltäydy ja tee vaihe 5 |
 | `.venv puuttuu` tai `robot: command not found` | Python-ympäristöä ei ole luotu | tee vaihe 3 |
-| `/mcp` ei näytä robotmcp:tä "connected"-tilassa | `robotmcp` ei ole PATHissa | tee vaihe 4 ja avaa uusi terminaali |
+| `/mcp` ei näytä robotmcp:tä "connected"-tilassa | venv ei ollut aktiivinen, kun `claude` käynnistettiin, tai RF-MCP puuttuu | sulje Claude, aja `source .venv/bin/activate` (Windows: `.venv/Scripts/activate`) ja `pip install -r requirements.txt`, käynnistä `claude` uudelleen |
 | `Get Device` ei löydä laitetta `Pixel 7` | Playwrightin laitenimet riippuvat versiosta | vaihda `PLAYWRIGHT_DEVICE` tiedostossa `resources/web/devices/pixel_7.py` |
 | Ennen toiminut lokaattori lakkaa toimimasta | yle.fi:n rakenne on muuttunut | aja `/tutki-web` uudelleen; korjaus osuu vain `UI_ids.py`:hin |
 | Hook ilmoittaa "Pythonia ei löytynyt" | Pythonia ei löydy Git Bashista | tee vaihe 3 tai tarkista Python-asennus |
 | Kirjautumistesti kaatuu heti | tunnuksia ei ole ladattu Clauden terminaaliin | `source .env` ja `claude` samassa terminaalissa |
+| `pip install` epäonnistuu riippuvuusristiriitaan | vanha `.venv` eri paketti- tai Python-versioilla | poista `.venv` ja tee vaihe 3 uudelleen |
 
 ---
 
