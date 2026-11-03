@@ -1,4 +1,4 @@
-# rf-ai-demo – Robot Framework + Claude Code
+# rf-claude-web-mobile-demo – Robot Framework + Claude Code testiautomaation tehostamiseen
 
 Esimerkkirepo Robot Framework -testiautomaatiosta Claude Codella. Samat testit ajetaan yle.fi:tä
 vasten **työpöytäselaimella** ja **mobiiliselaimella** (Browser Libraryn laite-emulointi).
