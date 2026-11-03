@@ -45,7 +45,7 @@ tests/                           VAIN ylätason testitapaukset (.robot)
 ## RF-MCP (robotmcp)
 - Tutki sovellus ja kokeile jokainen askel robotmcp:llä *ennen* tiedostoon kirjoittamista.
   Lokaattori on vahvistettu vasta, kun klikkaus, kirjoitus tai odotus on oikeasti onnistunut.
-- Työpöytä: viewport 1920x1080. Mobiili: `Get Device    Pixel 7` ja `New Context    &{device}`.
+- Työpöytä: viewport 1280x720 (Browser Libraryn oletus). Mobiili: `Get Device    Pixel 7` ja `New Context    &{device}`.
 - Lokaattoriprioriteetti: `data-testid` / role / aria > id > css > text > xpath (viimeinen keino).
 - `build_test_suite`-luonnosta ei kopioida sellaisenaan: askeleet siirretään tämän repon rakenteeseen.
 - Yle Tunnus -lomake on tunnus.yle.fi-iframessa: Browser läpäisee sen `>>>`-erottimella.

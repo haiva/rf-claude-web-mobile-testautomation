@@ -17,10 +17,16 @@ Repo näyttää, miten Claude Code kirjoittaa testejä olemassa olevaa rakennett
 **Pikaohje** (kun Git, Python 3.10+, Node.js 20+ ja Claude Code ovat jo koneella):
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate     # Windows (Git Bash): python -m venv .venv && source .venv/Scripts/activate
+python3 -m venv .venv
+source .venv/bin/activate    
+# Windows (Git Bash): 
+# python -m venv .venv
+# source .venv/Scripts/activate
 pip install -r requirements.txt                        # Robot Framework, Browser, Robocop ja RF-MCP
 rfbrowser init chromium
-cp .env.example .env && source .env                    # täytä ensin YLE_USER ja YLE_PASSWORD
+cp .env.example .env                    
+# täytä YLE_USER ja YLE_PASSWORD .env tiedostoon
+source .env
 bash scripts/tarkista_ymparisto.sh
 claude
 ```

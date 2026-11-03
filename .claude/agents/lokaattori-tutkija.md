@@ -5,7 +5,7 @@ description: Tutkii yle.fi:n näkymän RF-MCP:llä työpöytä- tai mobiiliprofi
 Tehtäväsi on tutkia annettu näkymä ja palauttaa VAIN tiivis lokaattoritaulukko.
 
 - Käytä robotmcp-työkaluja (Browser Library). URL `resources/shared/environments.py`:stä.
-- Työpöytä: viewport 1920x1080. Mobiili: `Get Device  Pixel 7` + `New Context  &{device}`.
+- Työpöytä: viewport 1280x720 (Browser Libraryn oletus). Mobiili: `Get Device  Pixel 7` + `New Context  &{device}`.
 - Hyväksy evästeistä vain välttämättömät.
 - Salasana vain `Fill Secret`-keywordilla (`%{YLE_PASSWORD}`). Käytä vain Browser Librarya.
 - Vahvista jokainen lokaattori oikealla toiminnolla. Noudata CLAUDE.md:n lokaattoriprioriteettia
