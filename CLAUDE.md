@@ -53,7 +53,6 @@ tests/                           VAIN ylätason testitapaukset (.robot)
   Selväkielinen arvo tallentuisi askelhistoriaan ja lokeihin.
 - **RF-MCP:llä käytetään vain Browser Librarya.** Älä tuo Process- tai OperatingSystem-kirjastoja
   äläkä aja niiden kautta komentoja tai tiedosto-operaatioita. Hook `guard_mcp` estää nämä.
-- Jokainen RF-MCP-kutsu vaatii käyttäjän luvan. Se on tarkoituksellista: käyttäjä näkee, mitä teet.
 
 ## Ajaminen (bash; Windowsissa Git Bash)
 ```bash
