@@ -13,7 +13,7 @@ ${SEARCH_TERM}    sää
 Search Finds Articles
     [Documentation]    HARJOITUS: työpöytä ensin, sitten sama testi mobiiliprofiililla.
     [Tags]    web_test    wip
-    # Given User Is On Front Page
-    # When User Searches For    ${SEARCH_TERM}
-    # Then Search Results Should Contain Articles
+    Given User Is On Front Page
+    When User Searches For    ${SEARCH_TERM}
+    Then Search Results Should Contain Articles
     Skip    Harjoitus: toteuta /uusi-testi-komennolla

@@ -33,7 +33,7 @@ tests/                           VAIN ylätason testitapaukset (.robot)
    esiintyvät lokaattorit `MOBILE_`-etuliitteellä.
 5. Ennen uutta keywordia: etsi olemassa olevat (`grep -rn "Keyword Name" resources/`).
    Järjestys: uudelleenkäytä → laajenna argumentilla → luo uusi.
-6. Tunnukset vain ympäristömuuttujista `%{YLE_USER}` ja `%{YLE_PASSWORD}`. Älä koskaan
+6. Tunnukset vain ympäristömuuttujista `%{YLE_USER}` ja `%YLE_PASSWORD`. Älä koskaan
    kirjoita salasanaa mihinkään tiedostoon.
 7. Tagit: `web_test` jokaiseen testiin, lisäksi tarvittaessa `smoke` ja `wip` (wip = kesken,
    jätetään ajoista pois).
